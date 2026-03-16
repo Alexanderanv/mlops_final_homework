@@ -1,0 +1,36 @@
+services:
+  jph:
+    build: .
+    env_file: .env
+    #user: "${DOCKER_OS_USERID:-1000}:${DOCKER_OS_GROUPID:-1000}"
+    #group_add:
+    #- "${DOCKER_OS_GROUPID}"
+    user: 0:0
+    environment:
+      JPH_ADMIN_USER: admin
+      DOCKER_NETWORK_NAME: jphub
+      DOCKER_NOTEBOOK_IMAGE: jupyterhub/singleuser
+      DOCKER_NOTEBOOK_DIR: /home/jovyan
+      DOCKER_SPAWN_CMD: start-singleuser.sh
+    ports:
+      - 8000:8000
+    networks:
+      - jphub
+    volumes:
+      - ./data/jph/jupyterhub_config.py:/app/jupyterhub_config.py:ro
+      - jphdata:/data
+      - /var/run/docker.sock:/var/run/docker.sock:rw
+    command: sh -c "python3 -m jupyterhub --config /app/jupyterhub_config.py"
+
+networks:
+  jphub:
+    name: jphub
+
+volumes:
+  jphdata:
+    name: jphdata
+    driver: local
+    driver_opts:
+      type: none
+      device: ./data/jph
+      o: bind

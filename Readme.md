@@ -20,3 +20,23 @@
 
 *Демо даг выполнен*
 ![Даг выполнен](images/2_airflow_dag_complete.png)
+
+## Этап 3. Развертывание LakeFS
+### Артефакты
+Каталог `./3_lakefs`
+### Скриншоты
+*Логи сервисов*
+![Логи](images/3_dvc_logs.png)
+
+*Lakefs diff*
+![lakefs diff](images/3_lakefs_merge.png)
+
+## Этап 4. Развертывание JupyterHub
+### Артефакты
+Каталог `./4_jupyterhub`
+### Скриншоты
+*Логи сервисов*
+![Логи](images/4_jph_logs.png)
+
+*Скрин запущенного сервиса*
+![Скрин JPH](images/4_jph_screen.png)

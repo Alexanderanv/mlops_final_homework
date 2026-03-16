@@ -20,4 +20,7 @@ temp/
 # ignored by lakectl local
 3_lakefs/temp/finalhw/*
 !3_lakefs/temp/finalhw/.lakefs_ref.yaml
-# End ignored by lakectl local
+
+# JupyterHub: ignore runtime data
+/4_jupyterhub/data/*
+!4_jupyterhub/data/jph/jupyterhub_config.py
