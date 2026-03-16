@@ -1,6 +1,15 @@
 .venv/
 .venv1/
-__pycache__/
+**/__pycache__/
 .DS_Store
+logs/
 
 *.pdf
+
+# Airflow: ignore runtime data, keeping DAGs
+/2_airflow/data/*
+!/2_airflow/data/airflow/
+/2_airflow/data/airflow/*
+!/2_airflow/data/airflow/dags/
+!/2_airflow/data/airflow/dags/**
+**/__pycache__/
