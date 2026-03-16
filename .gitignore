@@ -1,9 +1,10 @@
+# Common
 .venv/
 .venv1/
 **/__pycache__/
 .DS_Store
 logs/
-
+temp/
 *.pdf
 
 # Airflow: ignore runtime data, keeping DAGs
@@ -13,3 +14,10 @@ logs/
 !/2_airflow/data/airflow/dags/
 !/2_airflow/data/airflow/dags/**
 **/__pycache__/
+
+# LakeFS: ignore runtime data
+/3_lakefs/data/*
+# ignored by lakectl local
+3_lakefs/temp/finalhw/*
+!3_lakefs/temp/finalhw/.lakefs_ref.yaml
+# End ignored by lakectl local
