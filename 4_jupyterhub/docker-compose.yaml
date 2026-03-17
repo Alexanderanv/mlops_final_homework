@@ -2,10 +2,9 @@ services:
   jph:
     build: .
     env_file: .env
-    #user: "${DOCKER_OS_USERID:-1000}:${DOCKER_OS_GROUPID:-1000}"
-    #group_add:
-    #- "${DOCKER_OS_GROUPID}"
-    user: 0:0
+    user: "${DOCKER_OS_USERID:-1000}:${DOCKER_OS_GROUPID:-1000}"
+    group_add:
+      - "${DOCKER_OS_GROUPID}"
     environment:
       JPH_ADMIN_USER: admin
       DOCKER_NETWORK_NAME: jphub

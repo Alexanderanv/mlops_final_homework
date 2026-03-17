@@ -40,3 +40,16 @@
 
 *Скрин запущенного сервиса*
 ![Скрин JPH](images/4_jph_screen.png)
+
+## Этап 5. Развертывание ML-сервиса
+### Артефакты
+Каталог `./5_mlservice`
+### Скриншоты
+*Логи сервисов*
+![Логи](images/5_mlservice_logs.png)
+
+*Тесты запросов*
+![Скрин JPH](images/5_mlservice_predicts.png)
+
+*Логи работы модели в БД*
+![Скрин JPH](images/5_mlservice_dblogs.png)
