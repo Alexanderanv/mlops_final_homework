@@ -71,3 +71,12 @@ Prometheus + Grafana `./6_metrics/metrics`
 ### Скриншоты
 *Запущенные сервисы*
 ![Сервисы](images/7_kubernetes_stats.png)
+
+## Этап 8. Упаковка сервиса в Helm
+### Артефакты
+`./8_helm/charts/`
+
+## Этап 9. Prompt Storage
+### Скриншоты
+*Версии промптов*
+![Промпты](images/9_prompts.png)
