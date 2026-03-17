@@ -1,0 +1,33 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: migrate-job
+  labels:
+    app: mlservice
+spec:
+  backoffLimit: 5
+  template:
+    metadata:
+      labels:
+        app: mlservice
+    spec:
+      containers:
+      - name: migrate
+        image: {{ .Values.migrate.image }}:{{ .Values.migrate.version }}
+        imagePullPolicy: Never
+        env:
+        - name: DATABASE_URL
+          value: "{{ .Values.migrate.databaseUrl }}"
+        - name: MIGRATE_ATTEMPTS
+          value: "30"
+        - name: MIGRATE_DELAY_S
+          value: "1"
+        command: ["python", "-m", "mlapp.migrate"]
+        resources:
+          requests:
+            cpu: {{ .Values.migrate.resources.requests.cpu }}
+            memory: {{ .Values.migrate.resources.requests.memory }}
+          limits:
+            cpu: {{ .Values.migrate.resources.limits.cpu }}
+            memory: {{ .Values.migrate.resources.limits.memory }}
+      restartPolicy: Never

@@ -1,0 +1,81 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mlservice-deployment
+  labels:
+    app: mlservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mlservice
+  template:
+    metadata:
+      labels:
+        app: mlservice
+    spec:
+      initContainers:
+      - name: wait-for-db
+        image: "{{ .Values.mlservice.waitForDb.image }}:{{ .Values.mlservice.waitForDb.version }}"
+        command:
+        - sh
+        - -c
+        - |
+          echo "Waiting for database..."
+          until pg_isready -h db -p 5432 -U mlservice; do
+            sleep 1
+          done
+          echo "Database is ready!"
+      containers:
+      - name: mlservice
+        image: "{{ .Values.mlservice.image }}:{{ .Values.mlservice.version }}"
+        imagePullPolicy: Never
+        ports:
+        - containerPort: {{ .Values.mlservice.config.servicePort }}
+          name: http
+          protocol: TCP
+        env:
+        - name: SERVICE_PORT
+          value: "{{ .Values.mlservice.config.servicePort }}"
+        - name: MLFLOW_TRACKING_URI
+          value: "{{ .Values.mlservice.config.mlflowTrackingUri }}"
+        - name: MODEL_URI
+          value: "{{ .Values.mlservice.config.modelUri }}"
+        - name: MODEL_VERSION
+          value: "{{ .Values.mlservice.config.modelVersion }}"
+        - name: DATABASE_URL
+          value: "{{ .Values.mlservice.config.databaseUrl }}"
+        resources:
+          requests:
+            cpu: {{ .Values.mlservice.resources.requests.cpu }}
+            memory: {{ .Values.mlservice.resources.requests.memory }}
+          limits:
+            cpu: {{ .Values.mlservice.resources.limits.cpu }}
+            memory: {{ .Values.mlservice.resources.limits.memory }}
+        startupProbe:
+          httpGet:
+            path: /metrics
+            port: {{ .Values.mlservice.config.servicePort }}
+            scheme: HTTP
+          initialDelaySeconds: 0
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 30
+        readinessProbe:
+          httpGet:
+            path: /metrics
+            port: {{ .Values.mlservice.config.servicePort }}
+            scheme: HTTP
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 3
+          failureThreshold: 3
+        livenessProbe:
+          httpGet:
+            path: /metrics
+            port: {{ .Values.mlservice.config.servicePort }}
+            scheme: HTTP
+          initialDelaySeconds: 15
+          periodSeconds: 20
+          timeoutSeconds: 3
+          failureThreshold: 3

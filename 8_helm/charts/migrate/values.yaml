@@ -1,0 +1,13 @@
+migrate:
+  image: mlservice
+  version: "latest"
+
+  databaseUrl: "postgresql://mlservice:mlservice@db:5432/mlservice"
+
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi

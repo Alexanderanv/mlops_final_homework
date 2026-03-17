@@ -16,54 +16,60 @@ spec:
     spec:
       containers:
       - name: postgres
-        image: postgres:17
+        image: "{{ .Values.postgres.image }}:{{ .Values.postgres.version }}"
         ports:
         - containerPort: 5432
           name: postgres
         env:
         - name: POSTGRES_DB
-          value: "mlservice"
+          value: "{{ .Values.postgres.db.name }}"
         - name: POSTGRES_USER
-          value: "mlservice"
+          value: "{{ .Values.postgres.db.user }}"
         - name: POSTGRES_PASSWORD
-          value: "mlservice"
+          value: "{{ .Values.postgres.db.password }}"
         volumeMounts:
         - name: postgres-storage
           mountPath: /var/lib/postgresql/data
+        resources:
+          requests:
+            cpu: "{{ .Values.postgres.resources.requests.cpu }}"
+            memory: "{{ .Values.postgres.resources.requests.memory }}"
+          limits:
+            cpu: "{{ .Values.postgres.resources.limits.cpu }}"
+            memory: "{{ .Values.postgres.resources.limits.memory }}"
         startupProbe:
           exec:
             command:
             - pg_isready
             - -U
-            - mlservice
+            - {{ .Values.postgres.db.user }}
           initialDelaySeconds: 0
           periodSeconds: 3
           timeoutSeconds: 3
-          successThreshold: 1
           failureThreshold: 20
         readinessProbe:
           exec:
             command:
             - pg_isready
             - -U
-            - mlservice
+            - {{ .Values.postgres.db.user }}
           initialDelaySeconds: 5
           periodSeconds: 10
           timeoutSeconds: 5
-          successThreshold: 1
           failureThreshold: 3
         livenessProbe:
           exec:
             command:
             - pg_isready
             - -U
-            - mlservice
+            - {{ .Values.postgres.db.user }}
           initialDelaySeconds: 30
           periodSeconds: 20
           timeoutSeconds: 5
-          successThreshold: 1
           failureThreshold: 3
+      {{- if .Values.postgres.persistence.enabled }}
       volumes:
       - name: postgres-storage
         persistentVolumeClaim:
           claimName: postgres-pvc
+      {{- end }}

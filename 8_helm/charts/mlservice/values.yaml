@@ -1,0 +1,23 @@
+mlservice:
+  image: mlservice
+  version: "latest"
+
+  config:
+    serviceHost: "0.0.0.0"
+    servicePort: 8000
+    mlflowTrackingUri: "http://host.docker.internal:8080"
+    modelUri: "models:/diabets/1"
+    modelVersion: "1"
+    databaseUrl: "postgresql://mlservice:mlservice@db:5432/mlservice"
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+  waitForDb:
+    image: postgres
+    version: "17"

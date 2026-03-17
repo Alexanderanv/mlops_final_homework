@@ -1,0 +1,11 @@
+apiVersion: v2
+version: 1.0.0
+appVersion: "latest"
+
+name: migrate
+description: Database migration job for MLOps final homework
+type: application
+keywords:
+- migrate
+- job
+- database

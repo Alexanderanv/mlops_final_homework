@@ -1,0 +1,23 @@
+postgres:
+  image: postgres
+  version: "17"
+
+  db:
+    name: mlservice
+    user: mlservice
+    password: mlservice
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+  persistence:
+    enabled: true
+    size: 1Gi
+    storageClassName: standard
+    accessModes:
+      - ReadWriteOnce

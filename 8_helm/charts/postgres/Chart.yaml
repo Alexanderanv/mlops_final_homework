@@ -1,0 +1,10 @@
+apiVersion: v2
+version: 1.0.0
+appVersion: "15"
+
+name: postgres
+description: PostgreSQL database for MLOps final homework
+type: application
+keywords:
+- postgres
+- database
