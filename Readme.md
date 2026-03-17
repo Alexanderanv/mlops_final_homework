@@ -53,3 +53,14 @@
 
 *Логи работы модели в БД*
 ![Скрин JPH](images/5_mlservice_dblogs.png)
+
+## Этап 6. Метрики развернутого сервиса
+### Артефакты
+Cервис с endpoint /metrics `./6_metrics/mlservice`
+Prometheus + Grafana `./6_metrics/metrics`
+### Скриншоты
+*Логи сервисов*
+![Логи](images/6_metrics_logs.png)
+
+*Дашборд Grafana*
+![Дашборд](images/6_metrics_dashboard.png)
