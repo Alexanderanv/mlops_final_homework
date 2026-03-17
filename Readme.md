@@ -64,3 +64,10 @@ Prometheus + Grafana `./6_metrics/metrics`
 
 *Дашборд Grafana*
 ![Дашборд](images/6_metrics_dashboard.png)
+
+## Этап 7. Подготовка к развертыванию в Kubernetes
+### Артефакты
+`./7_kubernetes/`
+### Скриншоты
+*Запущенные сервисы*
+![Сервисы](images/7_kubernetes_stats.png)

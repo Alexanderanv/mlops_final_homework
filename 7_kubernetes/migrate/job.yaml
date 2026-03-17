@@ -1,0 +1,26 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: migrate-job
+  labels:
+    app: mlservice
+spec:
+  template:
+    metadata:
+      labels:
+        app: mlservice
+    spec:
+      containers:
+      - name: migrate
+        image: mlservice:latest
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: DATABASE_URL
+          value: "postgresql://mlservice:mlservice@db:5432/mlservice"
+        - name: MIGRATE_ATTEMPTS
+          value: "30"
+        - name: MIGRATE_DELAY_S
+          value: "1"
+        command: ["python", "-m", "mlapp.migrate"]
+      restartPolicy: Never
+  backoffLimit: 5

@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mlservice-deployment
+  labels:
+    app: mlservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mlservice
+  template:
+    metadata:
+      labels:
+        app: mlservice
+    spec:
+      initContainers:
+      - name: wait-for-db
+        image: postgres:17
+        command:
+        - sh
+        - -c
+        - |
+          echo "Waiting for database..."
+          until pg_isready -h db -p 5432 -U mlservice; do
+            sleep 1
+          done
+          echo "Database is ready!"
+      containers:
+      - name: mlservice
+        image: mlservice:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8000
+          name: http
+          protocol: TCP
+        env:
+        - name: SERVICE_HOST
+          value: "0.0.0.0"
+        - name: SERVICE_PORT
+          value: "8000"
+        - name: MLFLOW_TRACKING_URI
+          value: "http://mlflow:8080" # tests "http://host.docker.internal:8080"
+        - name: MODEL_URI
+          value: "models:/diabets/1"
+        - name: MODEL_VERSION
+          value: "1"
+        - name: DATABASE_URL
+          value: "postgresql://mlservice:mlservice@db:5432/mlservice"
+        startupProbe:
+          httpGet:
+            path: /metrics
+            port: 8000
+            scheme: HTTP
+          initialDelaySeconds: 0
+          periodSeconds: 5
+          timeoutSeconds: 3
+          successThreshold: 1
+          failureThreshold: 30
+        readinessProbe:
+          httpGet:
+            path: /metrics
+            port: 8000
+            scheme: HTTP
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 3
+          successThreshold: 1
+          failureThreshold: 3
+        livenessProbe:
+          httpGet:
+            path: /metrics
+            port: 8000
+            scheme: HTTP
+          initialDelaySeconds: 15
+          periodSeconds: 20
+          timeoutSeconds: 3
+          successThreshold: 1
+          failureThreshold: 3
